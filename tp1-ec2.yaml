@@ -1,8 +1,16 @@
 # @format
+Mappings:
+  RegionMap:
+    eu-west-1:
+      "32": "ami-0ea0f26a6d50850c5"
+      "64": "ami-062cd09187a31b743"
+    eu-central-1:
+      "32": "ami-05ff5eaef6149df49"
+      "64": "ami-0d9de36666c01a9ca"
 
 Parameters:
   SecurityGroupDescription:
-    Description: Security Group Description:
+    Description: Security Group Description
     Type: String
 
 Resources:
@@ -12,7 +20,7 @@ Resources:
     Properties:
       AvailabilityZone: eu-west-1a
       InstanceType: t2.micro
-      ImageId: ami-0ea0f26a6d50850c5
+      ImageId: !FindInMap [RegionMap, !Ref "AWS::Region", 32]
       SecurityGroups:
         - !Ref SSHSecurityGroup
         - !Ref ServerSecurityGroup

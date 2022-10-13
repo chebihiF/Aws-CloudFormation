@@ -1,5 +1,10 @@
 # @format
 
+Parameters:
+  SecurityGroupDescription:
+    Description: Security Group Description:
+    Type: String
+
 Resources:
   #EC2
   MyInstance:
@@ -29,11 +34,11 @@ Resources:
           IpProtocol: tcp
           ToPort: 22
 
-    # our second EC2 Security group
+  # our second EC2 Security group
   ServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: Enable SSH ans HTTP access
+      GroupDescription: !Ref SecurityGroupDescription
       SecurityGroupIngress:
         - CidrIp: 0.0.0.0/0
           FromPort: 22

@@ -1,0 +1,15 @@
+# @format
+
+Resources:
+  #EC2
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: eu-west-1a
+      InstanceType: t2.micro
+      ImageId: ami-0ea0f26a6d50850c5
+  # an elastic IP for our instance
+  MyEIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      InstanceId: !Ref MyInstance

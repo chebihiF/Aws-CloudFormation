@@ -8,6 +8,9 @@ Resources:
       AvailabilityZone: eu-west-1a
       InstanceType: t2.micro
       ImageId: ami-0ea0f26a6d50850c5
+      SecurityGroups:
+        - !Ref SSHSecurityGroup
+        - !Ref ServerSecurityGroup
 
   # an elastic IP for our instance
   MyEIP:

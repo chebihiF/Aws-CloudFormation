@@ -1,0 +1,70 @@
+# @format
+
+Parameters:
+  SSHKey:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: Name of an existing EC2 KeyPair to enable ssh access tp the instance
+
+Resources:
+  MyInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone: eu-west-1a
+      ImageId: ami-0ea0f26a6d50850c5
+      InstanceType: t2.micro
+      KeyName: !Ref SSHKey
+      SecurityGroups:
+        - !Ref ServerSecurityGroup
+      # install our web server with user Data
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash -xe
+            # Get the lastest version CloudFormation package
+            yum update -y aws-cfn-bootstrap
+            # Start cfn-init
+            /opt/aws/bin/cfn-init -s ${AWS::StackId} -r MyInstance --region ${AWS::Region} || error_exit 'Failed to run cfn-init'
+            # Start cfn-signal to wait for a codition to be validate
+            /opt/aws/bin/cfn-signal -e $? -s ${AWS::StackId} --region ${AWS::Region} -r SimpleWaitCondition
+    Metadata:
+      Comment: Install a simple Apatche Http page
+      AWS::CloudFormation::Init:
+        config:
+          packages:
+            yum:
+              httpd: []
+          files:
+            "/var/www/html/index.html":
+              content: |
+                <h1> Hello World from EC2 instance </h1>
+                <p> This was created using cfn-init </p>
+              mode: '00644'
+          commands:
+            hello:
+              command: "echo 'Hello world'"
+          services:
+            sysvinit:
+              httpd:
+                enable: "true"
+                ensureRunning: "true"
+
+  # our second EC2 Security group
+  ServerSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: SSH & HTTP
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+        - CidrIp: 0.0.0.0/0
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+
+  SimpleWaitCondition:
+    CreationPolicy:
+      Timeout: PT2M
+      Count: 1
+    Type: AWS::CloudFormation::WaitCondition

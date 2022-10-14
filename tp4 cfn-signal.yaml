@@ -25,7 +25,7 @@ Resources:
             # Start cfn-init
             /opt/aws/bin/cfn-init -s ${AWS::StackId} -r MyInstance --region ${AWS::Region} || error_exit 'Failed to run cfn-init'
             # Start cfn-signal to wait for a codition to be validate
-            /opt/aws/bin/cfn-signal -e $? -s ${AWS::StackId} --region ${AWS::Region} -r SimpleWaitCondition
+            /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackId} --region ${AWS::Region} --resource SimpleWaitCondition
     Metadata:
       Comment: Install a simple Apatche Http page
       AWS::CloudFormation::Init:
@@ -65,6 +65,7 @@ Resources:
 
   SimpleWaitCondition:
     CreationPolicy:
-      Timeout: PT2M
-      Count: 1
+      ResourceSignal:
+        Timeout: PT5M
+        Count: 1
     Type: AWS::CloudFormation::WaitCondition

@@ -26,7 +26,7 @@ Resources:
             /opt/aws/bin/cfn-init -s ${AWS::StackId} -r MyInstance --region ${AWS::Region} || error_exit 'Failed to run cfn-init'
     Metadata:
       Comment: Install a simple Apatche Http page
-      AWS::CloudFormation:Init:
+      AWS::CloudFormation::Init:
         config:
           package:
             yum:

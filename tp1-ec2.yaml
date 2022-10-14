@@ -26,10 +26,10 @@ Resources:
         - !Ref ServerSecurityGroup
 
   # an elastic IP for our instance
-  MyEIP:
-    Type: AWS::EC2::EIP
-    Properties:
-      InstanceId: !Ref MyInstance
+  #  MyEIP:
+  #    Type: AWS::EC2::EIP
+  #    Properties:
+  #      InstanceId: !Ref MyInstance
 
   # our EC2 Security group
   SSHSecurityGroup:

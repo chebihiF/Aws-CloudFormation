@@ -16,33 +16,34 @@ Resources:
       SecurityGroups:
         - !Ref ServerSecurityGroup
       # install our web server with user Data
-      UserData: !Sub |
-        #!/bin/bash -xe
-        # Get the lastest version CloudFormation package
-        yum update -y aws-cfn-bootstrap
-        # Start cfn-init
-        /opt/aws/bin/cfn-init -s ${AWS::StackId} -r MyInstance --region ${AWS::Region} || error_exit 'Failed to run cfn-init'
-
-      Metadata:
-        Comment: Install a simple Apatche Http page
-        AWS::CloudFormation:Init:
-          config:
-            package:
-              yum:
-                httpd: []
-            files:
-              "/var/www/html/index.html":
-                content: |
-                  <h1> Hello World from EC2 instance </h1>
-                  <p> This was created using cfn-init </p>
-            commands:
-              hello:
-                command: "echo 'Hello world'"
-            services:
-              sysvinit:
-                httpd:
-                  enable: "true"
-                  ensureRunning: "true"
+      UserData:
+        Fn::Base64: 
+          !Sub |
+            #!/bin/bash -xe
+            # Get the lastest version CloudFormation package
+            yum update -y aws-cfn-bootstrap
+            # Start cfn-init
+            /opt/aws/bin/cfn-init -s ${AWS::StackId} -r MyInstance --region ${AWS::Region} || error_exit 'Failed to run cfn-init'
+    Metadata:
+      Comment: Install a simple Apatche Http page
+      AWS::CloudFormation:Init:
+        config:
+          package:
+            yum:
+              httpd: []
+          files:
+            "/var/www/html/index.html":
+              content: |
+                <h1> Hello World from EC2 instance </h1>
+                <p> This was created using cfn-init </p>
+          commands:
+            hello:
+              command: "echo 'Hello world'"
+          services:
+            sysvinit:
+              httpd:
+                enable: "true"
+                ensureRunning: "true"
 
   # our second EC2 Security group
   ServerSecurityGroup:

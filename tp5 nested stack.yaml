@@ -19,6 +19,6 @@ Resources:
 
 Outputs:
   StackRef:
-    value: !Ref MyStack
+    Value: !Ref MyStack
   OutputFromNestedStack:
-    value: !GetAtt MyStack.Outputs.WebsiteURL
+    Value: !GetAtt MyStack.Outputs.WebsiteURL

@@ -28,7 +28,7 @@ Resources:
   ServerSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Ref SecurityGroupDescription
+      GroupDescription: SSH & HTTP
       SecurityGroupIngress:
         - CidrIp: 0.0.0.0/0
           FromPort: 22

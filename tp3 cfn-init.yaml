@@ -28,7 +28,7 @@ Resources:
       Comment: Install a simple Apatche Http page
       AWS::CloudFormation::Init:
         config:
-          package:
+          packages:
             yum:
               httpd: []
           files:
@@ -36,6 +36,7 @@ Resources:
               content: |
                 <h1> Hello World from EC2 instance </h1>
                 <p> This was created using cfn-init </p>
+              mode: '00644'
           commands:
             hello:
               command: "echo 'Hello world'"
